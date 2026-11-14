@@ -9,3 +9,10 @@ vizinhos_arad = mapa_romenia['Arad']
 print()
 print(f'Vizinhos de Arad: {vizinhos_arad}')
 print(f'Tipo do valor: {type(vizinhos_arad)}')
+
+# Passo 4
+primeira = vizinhos_arad[0]
+print()
+print(f'Primeira estrada que sai de Arad: {primeira}')
+print(f'    posição [0] -> cidade vizinha: {primeira[0]}')
+print(f'    posição [1] -> custo em km   : {primeira[1]}')
