@@ -37,3 +37,14 @@ print('Para cada vizinho de Arad: custo da estrada e h(vizinho)')
 for vizinho, custo in mapa_romenia['Arad']:
     h = heuristica_bucareste[vizinho]
     print(f' {vizinho:<10} estrada = {custo:>3} km  h = {h:>3} km')
+
+
+# Desafios
+# 1 Cidades com uma estrada apenas
+print()
+print('Cidades com apenas 1 estrada')
+for cidade in mapa_romenia:
+    quantidade = len(mapa_romenia[cidade])
+    if(quantidade == 1):
+        print(f'Cidade: {cidade}')
+
