@@ -54,3 +54,16 @@ print('Cidades com o h(n) menor do que 200')
 for cidade in heuristica_bucareste:
     if heuristica_bucareste[cidade] < 200:
         print(cidade)
+
+
+# Estrada mais longa do mapa
+print()
+print('Estrada mais longa do mapa')
+maior_estrada = {'cidade': None, 'distancia': 0}
+for cidade, vizinhos in mapa_romenia.items():
+    for vizinho, distancia in vizinhos:
+        if distancia > maior_estrada['distancia']:
+            maior_estrada['distancia'] = distancia
+            maior_estrada['cidade'] = cidade
+
+print(maior_estrada)
