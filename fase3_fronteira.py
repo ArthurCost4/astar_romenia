@@ -14,3 +14,15 @@ print()
 print(f'Nó retirado: {no}')
 print(f'    f = {f_atual} | g = {g_atual} | cidade = {cidade_atual} | caminho = {caminho}')
 print(f'Fronteira agora: {fronteira}')
+
+for vizinho, custo_estrada in mapa_romenia[cidade_atual]:
+    novo_g = g_atual + custo_estrada
+    novo_h = heuristica_bucareste[vizinho]
+    novo_f = novo_g + novo_h
+    novo_caminho = caminho + [vizinho]
+    fronteira.append((novo_f, novo_g, vizinho, novo_caminho))
+
+print()
+print('Fronteira depois de expandir Arad (ordem de inserção):')
+for item in fronteira:
+    print(' ', item)
