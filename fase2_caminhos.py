@@ -41,3 +41,10 @@ mostrar_g_h_f(por_fagaras)
 print()
 print('Valores ao longo do caminho por Pitesti:')
 mostrar_g_h_f(por_pitesti)
+
+
+# ------------------------------- DESAFIOS -----------------
+# Desafio 1 Custo do seguinte caminho
+por_pitesti = ['Arad', 'Timisoara', 'Lugoj', 'Mehadia', 'Drobeta', 'Craiova', 'Pitesti', 'Bucharest']
+print('Caminho por Pitesti: ', ' -> '.join(por_pitesti))
+print('     custo =', custo_do_caminho(por_pitesti), 'Km')
