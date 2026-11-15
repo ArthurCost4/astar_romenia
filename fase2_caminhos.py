@@ -34,3 +34,10 @@ def mostrar_g_h_f(caminho):
         h = heuristica_bucareste[cidade]
         f = g + h
         print(f'    {cidade:<15} {g:>5} {h:>5} {f:>5}')
+
+print()
+print('Valores ao longo do caminho por Fagaras:')
+mostrar_g_h_f(por_fagaras)
+print()
+print('Valores ao longo do caminho por Pitesti:')
+mostrar_g_h_f(por_pitesti)
