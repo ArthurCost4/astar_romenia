@@ -26,3 +26,9 @@ print()
 print('Fronteira depois de expandir Arad (ordem de inserção):')
 for item in fronteira:
     print(' ', item)
+
+fronteira.sort(key=lambda no: no[0])
+print()
+print(f'Fronteira ordenada pelo f (posição 0 da tupla):')
+for item in fronteira:
+    print(' ', item)
