@@ -24,3 +24,13 @@ print('Caminho por Fagaras:', ' -> '.join(por_fagaras))
 print('     custo =', custo_do_caminho(por_fagaras), 'Km')
 print('Caminho por Pitesti:', ' -> '.join(por_pitesti))
 print(' custo =', custo_do_caminho(por_pitesti), 'km')
+
+def mostrar_g_h_f(caminho):
+    'Para cada cidade do caminho imprime g (já andado), h (falta) e f = g + h.'
+    print(f'    {"cidade":<15} {"g(h)":>5} {"h(n)":>5} {"f(n)":>5}')
+    for i in range(len(caminho)):
+        cidade = caminho[i]
+        g = custo_do_caminho(caminho[:i + 1])
+        h = heuristica_bucareste[cidade]
+        f = g + h
+        print(f'    {cidade:<15} {g:>5} {h:>5} {f:>5}')
