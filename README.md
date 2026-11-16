@@ -389,3 +389,466 @@ Isso ocorre porque a soma entre o custo acumulado (`g`) e a estimativa restante 
 **Objetivo:** compreender como a função de avaliação pode indicar que um caminho está se tornando menos promissor.
 
 ---
+# Documentação passo 3 
+# Documentação do Código
+
+Este código apresenta uma **simulação manual das primeiras etapas do algoritmo A\***, mostrando como a fronteira é criada, como os nós são expandidos e como a escolha do próximo nó ocorre com base na função de avaliação:
+
+```text
+f(n) = g(n) + h(n)
+```
+
+onde:
+
+- `g(n)` = custo real acumulado até o nó;
+- `h(n)` = estimativa restante até Bucareste;
+- `f(n)` = custo total estimado.
+
+---
+
+## Passo 1 - Criação do Nó Inicial
+
+```python
+inicio = 'Arad'
+
+g = 0
+h = heuristica_bucareste[inicio]
+
+no_inicial = (g + h, g, inicio, [inicio])
+```
+
+Inicializa a busca pela cidade de **Arad**.
+
+### Componentes do nó
+
+A tupla segue o formato:
+
+```python
+(f, g, cidade, caminho)
+```
+
+Para Arad:
+
+```python
+(366, 0, 'Arad', ['Arad'])
+```
+
+onde:
+
+| Valor | Significado |
+|---------|-------------|
+| `f=366` | custo estimado total |
+| `g=0` | nenhum custo percorrido |
+| `cidade='Arad'` | cidade atual |
+| `['Arad']` | caminho percorrido |
+
+**Objetivo:** criar o primeiro nó que será inserido na fronteira.
+
+---
+
+## Passo 2 - Inicialização da Fronteira
+
+```python
+fronteira = [no_inicial]
+
+print(f'Fronteira no começo: {fronteira}')
+```
+
+A fronteira representa os nós candidatos à expansão.
+
+Inicialmente contém apenas:
+
+```text
+[(366, 0, 'Arad', ['Arad'])]
+```
+
+**Objetivo:** armazenar os nós que podem ser explorados.
+
+---
+
+## Passo 3 - Removendo o Primeiro Nó da Fronteira
+
+```python
+no = fronteira.pop(0)
+
+f_atual, g_atual, cidade_atual, caminho = no
+```
+
+Remove o primeiro elemento da fronteira para expansão.
+
+Resultado:
+
+```python
+f_atual = 366
+g_atual = 0
+cidade_atual = 'Arad'
+caminho = ['Arad']
+```
+
+Em seguida, os dados do nó são exibidos.
+
+**Objetivo:** selecionar o próximo nó a ser expandido.
+
+---
+
+## Passo 4 - Expansão de Arad
+
+```python
+for vizinho, custo_estrada in mapa_romenia[cidade_atual]:
+```
+
+Percorre todos os vizinhos de Arad:
+
+- Zerind
+- Sibiu
+- Timisoara
+
+Para cada vizinho são calculados:
+
+### Novo custo acumulado
+
+```python
+novo_g = g_atual + custo_estrada
+```
+
+Representa a distância já percorrida.
+
+---
+
+### Nova heurística
+
+```python
+novo_h = heuristica_bucareste[vizinho]
+```
+
+Representa a distância estimada até Bucareste.
+
+---
+
+### Nova função de avaliação
+
+```python
+novo_f = novo_g + novo_h
+```
+
+Aplica a fórmula do algoritmo A*.
+
+---
+
+### Novo caminho
+
+```python
+novo_caminho = caminho + [vizinho]
+```
+
+Adiciona o vizinho ao caminho percorrido.
+
+---
+
+### Inserção na fronteira
+
+```python
+fronteira.append(
+    (novo_f, novo_g, vizinho, novo_caminho)
+)
+```
+
+Adiciona o novo nó à fronteira.
+
+**Objetivo:** gerar todos os sucessores do nó atual.
+
+---
+
+## Passo 5 - Exibindo a Fronteira Após a Expansão
+
+```python
+print('Fronteira depois de expandir Arad:')
+```
+
+Após expandir Arad, a fronteira contém:
+
+```text
+(449, 75, Zerind, ...)
+(393, 140, Sibiu, ...)
+(447, 118, Timisoara, ...)
+```
+
+Os nós aparecem na ordem em que foram inseridos.
+
+**Objetivo:** visualizar os nós gerados antes da ordenação.
+
+---
+
+## Passo 6 - Ordenando a Fronteira
+
+```python
+fronteira.sort(key=lambda no: no[0])
+```
+
+Ordena a fronteira pelo valor de `f`.
+
+Lembrando que:
+
+```python
+no[0] = f
+```
+
+Após a ordenação:
+
+```text
+Sibiu      (393)
+Timisoara  (447)
+Zerind     (449)
+```
+
+**Objetivo:** garantir que o próximo nó expandido seja aquele com menor valor de `f`.
+
+---
+
+## Passo 7 - Escolhendo o Próximo Nó
+
+```python
+proximo = fronteira.pop(0)
+```
+
+Remove o primeiro elemento da fronteira ordenada.
+
+Resultado:
+
+```text
+Sibiu
+```
+
+pois possui o menor valor de `f`.
+
+```text
+f = 393
+```
+
+**Objetivo:** reproduzir o comportamento do algoritmo A* ao escolher o melhor candidato disponível.
+
+---
+
+# Desafio 1 - Expandindo Sibiu Manualmente
+
+O exercício solicita expandir **Sibiu** manualmente.
+
+Os vizinhos de Sibiu são:
+
+```text
+Arad
+Oradea
+Fagaras
+Rimnicu Vilcea
+```
+
+---
+
+## Iteração 1 - Arad
+
+```python
+novo_g = 140 + 140
+novo_h = 366
+novo_f = 280 + 366
+```
+
+Resultado:
+
+```text
+f = 646
+```
+
+Caminho:
+
+```python
+['Arad', 'Sibiu', 'Arad']
+```
+
+---
+
+## Iteração 2 - Oradea
+
+```python
+novo_g = 140 + 151
+novo_h = 380
+novo_f = 291 + 380
+```
+
+Resultado:
+
+```text
+f = 671
+```
+
+Caminho:
+
+```python
+['Arad', 'Sibiu', 'Oradea']
+```
+
+---
+
+## Iteração 3 - Fagaras
+
+```python
+novo_g = 140 + 99
+novo_h = 176
+novo_f = 239 + 176
+```
+
+Resultado:
+
+```text
+f = 415
+```
+
+Caminho:
+
+```python
+['Arad', 'Sibiu', 'Fagaras']
+```
+
+---
+
+## Iteração 4 - Rimnicu Vilcea
+
+```python
+novo_g = 140 + 80
+novo_h = 193
+novo_f = 220 + 193
+```
+
+Resultado:
+
+```text
+f = 413
+```
+
+Caminho:
+
+```python
+['Arad', 'Sibiu', 'Rimnicu Vilcea']
+```
+
+---
+
+## Fronteira Ordenada
+
+Após expandir Sibiu:
+
+```text
+Rimnicu Vilcea (413)
+Fagaras        (415)
+Timisoara      (447)
+Zerind         (449)
+Arad           (646)
+Oradea         (671)
+```
+
+### Por que Arad apareceu novamente?
+
+Porque o algoritmo implementado até este ponto:
+
+```python
+ainda não controla nós visitados
+```
+
+Assim, ao expandir Sibiu, a cidade Arad é considerada novamente um vizinho válido e volta para a fronteira.
+
+Isso gera ciclos como:
+
+```text
+Arad -> Sibiu -> Arad
+```
+
+A correção desse problema ocorre em etapas posteriores, quando são adicionadas estruturas para evitar revisitar estados já explorados.
+
+---
+
+# Desafio 2 - Busca de Custo Uniforme
+
+O A* ordena a fronteira por:
+
+```python
+no[0]
+```
+
+que corresponde a:
+
+```python
+f = g + h
+```
+
+O desafio propõe ordenar por:
+
+```python
+no[1]
+```
+
+ou seja:
+
+```python
+g
+```
+
+---
+
+## Novo Critério
+
+```python
+fronteira.sort(key=lambda no: no[1])
+```
+
+Agora o algoritmo escolhe sempre o nó com menor custo acumulado.
+
+---
+
+## Nó Escolhido
+
+O primeiro nó removido será aquele que possuir o menor valor de:
+
+```text
+g(n)
+```
+
+independentemente da heurística.
+
+---
+
+## Por que isso é Busca de Custo Uniforme?
+
+Porque a decisão de expansão passa a considerar apenas:
+
+```text
+g(n)
+```
+
+ou seja, o custo real já percorrido.
+
+A heurística deixa de influenciar a escolha.
+
+Matematicamente:
+
+```text
+f(n) = g(n)
+```
+
+Esse é exatamente o comportamento da **Busca de Custo Uniforme (Uniform Cost Search - UCS)**, que sempre expande o caminho mais barato encontrado até o momento.
+
+---
+
+# Resumo
+
+Este código demonstra as etapas iniciais do algoritmo A*:
+
+1. Criação do nó inicial.
+2. Inserção do nó na fronteira.
+3. Remoção do próximo nó a ser expandido.
+4. Geração dos sucessores.
+5. Cálculo dos valores `g`, `h` e `f`.
+6. Ordenação da fronteira pelo menor `f`.
+7. Escolha do próximo nó para expansão.
+8. Identificação do problema de revisitação de estados.
+9. Comparação entre A* e Busca de Custo Uniforme.
+
+Esses conceitos são fundamentais para compreender o funcionamento interno de algoritmos de busca inform
