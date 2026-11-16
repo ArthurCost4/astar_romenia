@@ -24,7 +24,11 @@ inicio = 'Arad'
 fronteira = [(heuristica_bucareste[inicio], 0, inicio, [inicio])]
 explorados = set()
 
-for rodada in [1,2,3]:
+
+# ________________________________________ DESAFIO ____________________________
+# Troque [1, 2, 3] por range(1, 7). Na rodada 6 sai Bucharest com f = 418 e mesmo assim o programa continua expandindo. O que está faltando? (É exatamente o que a Fase 5 acrescenta.)
+
+for rodada in range(1,7):
     fronteira.sort(key=lambda no: no[0])
     no = fronteira.pop(0)
     cidade = no[2]
@@ -34,3 +38,6 @@ for rodada in [1,2,3]:
     mostrar_fronteira(fronteira)
     print('     explorados:', sorted(explorados))
     print()
+
+# Está faltando uma ordem de parada quando chegar em Bucharest, o codigo em si ainda não entende isso e concluindo ele continua expandindo 'infinitamente'
+
