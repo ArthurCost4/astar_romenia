@@ -69,4 +69,13 @@ novo_h = 193
 novo_f = 220 + 193 
 novo_caminho = ['Arad', 'Sibiu', 'Rimnicu Vilcea']
 
-# Arad volta porque o codigo em si ainda não filtra já visitadas, então Arad entra de novo com f = 646.
+# Arad volta porque o codigo em si ainda não filtra já visitadas, então Arad entra de novo com f = 646
+
+# DESAFIO 2 Ordene por no[1] (o g) em vez de no[0]. Que nó sai primeiro? Esse critério é a busca de custo uniforme.
+no = fronteira.pop(1)
+f_atual, g_atual, cidade_atual, caminho = no
+print()
+print(f'Nó retirado: {no}')
+print(f'    f = {f_atual} | g = {g_atual} | cidade = {cidade_atual} | caminho = {caminho}')
+print(f'Fronteira agora: {fronteira}')
+# Sim é custo uniforme porque o criterio passa a ser o menor g pois ela expande o nó com menor custo acumulado
