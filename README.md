@@ -1274,3 +1274,502 @@ Além disso demonstra:
 7. Identificação da necessidade de uma condição de parada ao atingir o objetivo.
 
 Esses conceitos aproximam a implementação do comportamento real do algoritmo **A\***, preparando o código para encontrar a rota ótima de forma eficiente.
+
+# Documentação do Código - Fase 5
+
+Este código apresenta uma implementação completa do algoritmo **A\*** (*A-Star*), responsável por encontrar o melhor caminho entre duas cidades utilizando tanto o custo já percorrido quanto uma estimativa da distância restante até o objetivo.
+
+A estratégia utilizada é baseada na função:
+
+```text
+f(n) = g(n) + h(n)
+```
+
+onde:
+
+- `g(n)` = custo real do caminho percorrido;
+- `h(n)` = estimativa da distância restante;
+- `f(n)` = custo total estimado.
+
+---
+
+## Passo 1 - Definição da Função `busca_a_estrela`
+
+```python
+def busca_a_estrela(inicio, objetivo):
+```
+
+A função recebe:
+
+- `inicio`: cidade de partida;
+- `objetivo`: cidade desejada.
+
+### Retorno
+
+```python
+(caminho, custo)
+```
+
+ou
+
+```python
+(None, float('inf'))
+```
+
+caso não exista caminho.
+
+**Objetivo:** executar a busca A* e encontrar a melhor rota entre duas cidades.
+
+---
+
+## Passo 2 - Inicialização da Fronteira
+
+```python
+fronteira = [
+    (
+        heuristica_bucareste[inicio],
+        0,
+        inicio,
+        [inicio]
+    )
+]
+```
+
+Cria o nó inicial.
+
+Formato de cada nó:
+
+```python
+(f, g, cidade, caminho)
+```
+
+Para Arad:
+
+```python
+(366, 0, 'Arad', ['Arad'])
+```
+
+onde:
+
+| Campo | Significado |
+|---------|-------------|
+| f | custo estimado total |
+| g | custo acumulado |
+| cidade | cidade atual |
+| caminho | rota percorrida |
+
+**Objetivo:** inserir o primeiro nó na fronteira.
+
+---
+
+## Passo 3 - Conjunto de Explorados
+
+```python
+explorados = set()
+```
+
+Armazena as cidades já processadas.
+
+**Objetivo:** evitar expansões repetidas e ciclos no grafo.
+
+---
+
+## Passo 4 - Laço Principal da Busca
+
+```python
+while fronteira:
+```
+
+O algoritmo continua executando enquanto houver nós para explorar.
+
+**Objetivo:** permitir que a busca avance até encontrar o destino ou esgotar todas as possibilidades.
+
+---
+
+## Passo 5 - Escolha do Melhor Nó
+
+```python
+fronteira.sort(key=lambda no: no[0])
+```
+
+Ordena a fronteira pelo valor de:
+
+```python
+no[0]
+```
+
+que corresponde a:
+
+```text
+f(n)
+```
+
+Ou seja:
+
+```text
+f(n) = g(n) + h(n)
+```
+
+---
+
+### Remoção do Melhor Candidato
+
+```python
+f_atual, g_atual, cidade_atual, caminho = fronteira.pop(0)
+```
+
+Remove o nó com menor valor de `f`.
+
+**Objetivo:** seguir a estratégia do algoritmo A*, sempre expandindo o nó mais promissor.
+
+---
+
+## Passo 6 - Teste de Objetivo
+
+```python
+if cidade_atual == objetivo:
+    return caminho, g_atual
+```
+
+Verifica se a cidade retirada da fronteira é o destino.
+
+Se for:
+
+- retorna o caminho encontrado;
+- retorna o custo total da rota.
+
+**Importante**
+
+O teste é realizado quando o nó é retirado da fronteira e não quando é gerado.
+
+Isso garante que a melhor solução foi encontrada.
+
+---
+
+## Passo 7 - Verificação de Cidade Explorada
+
+```python
+if cidade_atual in explorados:
+    continue
+```
+
+Ignora cidades que já foram processadas anteriormente.
+
+---
+
+### Adicionando aos Explorados
+
+```python
+explorados.add(cidade_atual)
+```
+
+Marca a cidade atual como visitada.
+
+**Objetivo:** evitar retrabalho e laços infinitos.
+
+---
+
+## Passo 8 - Expansão dos Vizinhos
+
+```python
+for vizinho, custo_estrada in mapa_romenia[cidade_atual]:
+```
+
+Percorre todas as cidades conectadas à cidade atual.
+
+---
+
+### Ignorando Explorados
+
+```python
+if vizinho not in explorados:
+```
+
+Somente cidades ainda não exploradas são consideradas.
+
+---
+
+### Calculando o Novo Custo
+
+```python
+novo_g = g_atual + custo_estrada
+```
+
+Representa o custo acumulado da rota até o vizinho.
+
+---
+
+### Calculando o Novo Valor de Avaliação
+
+```python
+novo_f = novo_g + heuristica_bucareste[vizinho]
+```
+
+Aplica:
+
+```text
+f(n) = g(n) + h(n)
+```
+
+---
+
+### Inserindo na Fronteira
+
+```python
+fronteira.append(
+    (
+        novo_f,
+        novo_g,
+        vizinho,
+        caminho + [vizinho]
+    )
+)
+```
+
+Cria o novo nó e o adiciona à fronteira.
+
+**Objetivo:** disponibilizar os próximos candidatos à expansão.
+
+---
+
+## Passo 9 - Falha na Busca
+
+```python
+return None, float('inf')
+```
+
+Executado apenas quando a fronteira fica vazia.
+
+Significa que nenhum caminho foi encontrado.
+
+---
+
+## Passo 10 - Executando o Algoritmo
+
+```python
+caminho, custo = busca_a_estrela(
+    'Arad',
+    'Bucharest'
+)
+```
+
+Busca a melhor rota entre:
+
+```text
+Arad → Bucharest
+```
+
+---
+
+### Exibindo o Resultado
+
+```python
+print('Caminho:', ' -> '.join(caminho))
+print('Custo :', custo, 'km')
+print('Passos :', len(caminho) - 1, 'estradas')
+```
+
+Saída esperada:
+
+```text
+Caminho:
+Arad -> Sibiu -> Rimnicu Vilcea -> Pitesti -> Bucharest
+
+Custo:
+418 km
+
+Passos:
+4 estradas
+```
+
+**Objetivo:** apresentar a rota ótima encontrada pelo A*.
+
+---
+
+# Desafio 1 - Transformando em Busca Gulosa
+
+Troque:
+
+```python
+fronteira.sort(key=lambda no: no[0])
+```
+
+por:
+
+```python
+fronteira.sort(
+    key=lambda no: heuristica_bucareste[no[2]]
+)
+```
+
+ou seja:
+
+```text
+ordenar apenas pelo h(n)
+```
+
+---
+
+## O que muda?
+
+Antes:
+
+```text
+f(n) = g(n) + h(n)
+```
+
+Depois:
+
+```text
+f(n) = h(n)
+```
+
+O algoritmo passa a considerar apenas a estimativa de proximidade ao objetivo.
+
+---
+
+## Resultado
+
+O caminho encontrado passa a ser:
+
+```text
+Arad
+→ Sibiu
+→ Fagaras
+→ Bucharest
+```
+
+com custo:
+
+```text
+450 km
+```
+
+---
+
+## Por quê?
+
+Porque a Busca Gulosa escolhe sempre a cidade que parece mais próxima do objetivo, ignorando o custo já percorrido.
+
+Ela é mais rápida, mas não garante a melhor solução.
+
+---
+
+# Desafio 2 - Movendo o Teste de Objetivo
+
+Alterar para:
+
+```python
+novo_g = g_atual + custo_estrada
+
+if vizinho == objetivo:
+    return caminho + [vizinho], novo_g
+```
+
+dentro do `for`.
+
+---
+
+## O que acontece?
+
+O resultado também passa a ser:
+
+```text
+450 km
+```
+
+---
+
+## Por que isso acontece?
+
+Ao expandir **Fagaras**, Bucareste é gerada como vizinha:
+
+```text
+Arad
+→ Sibiu
+→ Fagaras
+→ Bucharest
+```
+
+com custo:
+
+```text
+450 km
+```
+
+Nesse momento o algoritmo encerra imediatamente.
+
+---
+
+## Qual o problema?
+
+Ele não permite que a busca continue explorando alternativas.
+
+Pouco depois seria encontrado o caminho:
+
+```text
+Arad
+→ Sibiu
+→ Rimnicu Vilcea
+→ Pitesti
+→ Bucharest
+```
+
+com custo:
+
+```text
+418 km
+```
+
+que é melhor.
+
+---
+
+## Por que o A* testa o objetivo ao retirar da fronteira?
+
+Porque quando um nó sai da fronteira com o menor valor de `f`, o algoritmo possui garantia de que aquele é o melhor caminho encontrado até então.
+
+Se o teste for feito durante a geração dos filhos:
+
+```python
+if vizinho == objetivo
+```
+
+essa garantia é perdida.
+
+---
+
+## Resposta do Desafio
+
+> Por que o resultado vira 450 km?
+
+Porque Bucareste é encontrada pela primeira vez através de **Fagaras**, e o algoritmo encerra imediatamente.
+
+Dessa forma ele não tem oportunidade de descobrir posteriormente a rota ótima passando por **Rimnicu Vilcea** e **Pitesti**, que possui custo total de **418 km**.
+
+---
+
+# Resumo
+
+Esta implementação representa uma versão funcional do algoritmo **A\*** e demonstra:
+
+1. Criação e gerenciamento da fronteira.
+2. Uso da função de avaliação `f(n) = g(n) + h(n)`.
+3. Controle de cidades exploradas.
+4. Expansão dos nós sucessores.
+5. Teste correto do objetivo.
+6. Retorno da rota ótima.
+7. Diferença entre A* e Busca Gulosa.
+8. Importância de testar o objetivo ao remover um nó da fronteira.
+
+Com essas etapas, o algoritmo encontra corretamente o melhor caminho:
+
+```text
+Arad → Sibiu → Rimnicu Vilcea → Pitesti → Bucharest
+```
+
+com custo mínimo de:
+
+```text
+418 km
+```
