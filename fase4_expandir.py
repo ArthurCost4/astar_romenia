@@ -19,3 +19,7 @@ def expandir(no, explorados):
         novo_f = novo_g + heuristica_bucareste[vizinho]
         filhos.append((novo_f, novo_g, vizinho, caminho + [vizinho]))
     return filhos
+
+inicio = 'Arad'
+fronteira = [(heuristica_bucareste[inicio], 0, inicio, [inicio])]
+explorados = set()
