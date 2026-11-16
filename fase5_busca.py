@@ -7,7 +7,9 @@ def busca_a_estrela(inicio, objetivo):
 
     while fronteira:
         # escolhe o nó de menor f
-        fronteira.sort(key=lambda no: no[0])
+        # fronteira.sort(key=lambda no: no[0])
+        fronteira.sort( key=lambda no: heuristica_bucareste[no[2]])
+
         f_atual, g_atual, cidade_atual, caminho = fronteira.pop(0)
 
         # teste de objetivo: feito ao RETIRAR o nó, não ao gerar
@@ -32,3 +34,8 @@ caminho, custo = busca_a_estrela('Arad', 'Bucharest')
 print('Caminho:', ' -> '.join(caminho))
 print('Custo :', custo, 'km')
 print('Passos :', len(caminho) - 1, 'estradas')
+
+
+# ----------------------------- Desafios -----------------------------------
+# Mude a ordenação para key=lambda no: heuristica_bucareste[no[2]] (só h). Você acabou de escrever a busca gulosa: o resultado vira 450 km. Depois desfaça.
+
