@@ -23,3 +23,14 @@ def expandir(no, explorados):
 inicio = 'Arad'
 fronteira = [(heuristica_bucareste[inicio], 0, inicio, [inicio])]
 explorados = set()
+
+for rodada in [1,2,3]:
+    fronteira.sort(key=lambda no: no[0])
+    no = fronteira.pop(0)
+    cidade = no[2]
+    explorados.add(cidade)
+    print(f'Rodada {rodada}: expandido {cidade} (f={no[0]}, g={no[1]})')
+    fronteira = fronteira + expandir(no, explorados)
+    mostrar_fronteira(fronteira)
+    print('     explorados:', sorted(explorados))
+    print()
