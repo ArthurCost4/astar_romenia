@@ -2,7 +2,7 @@ from mapa import mapa_romenia, heuristica_bucareste
 
 def busca_a_estrela(inicio, objetivo):
     'Devolve (caminho, custo) do melhor caminho, ou (None, infinito).'
-    fronteira = [(heuristica_bucareste[inicio]), 0, inicio, [inicio]]
+    fronteira = [(heuristica_bucareste[inicio], 0, inicio, [inicio])]
     explorados = set()
 
     while fronteira:
@@ -26,3 +26,9 @@ def busca_a_estrela(inicio, objetivo):
                 novo_f = novo_g + heuristica_bucareste[vizinho]
                 fronteira.append((novo_f, novo_g, vizinho, caminho + [vizinho]))
     return None, float('inf')
+
+
+caminho, custo = busca_a_estrela('Arad', 'Bucharest')
+print('Caminho:', ' -> '.join(caminho))
+print('Custo :', custo, 'km')
+print('Passos :', len(caminho) - 1, 'estradas')
