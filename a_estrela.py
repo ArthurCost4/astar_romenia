@@ -66,8 +66,8 @@ def main():
 
     print()
     print('--- Outras origens (sem rastro) ---')
-    for origem in ['Timisoara', 'Oradea', 'Craiova', 'Iasi']:
-        caminho, custo = busca_a_estrela(origem, 'Bucharest', mapa_romenia, h_zero, mostrar=False)
+    for origem in ['Lugoj', 'Mehadia', 'Eforie', 'Iasi']:
+        caminho, custo = busca_a_estrela(origem, 'Bucharest', mapa_romenia, heuristica_bucareste, mostrar=True)
         print(f'{origem:<10} {custo:>4} km ', ' -> '.join(caminho))
 
 
