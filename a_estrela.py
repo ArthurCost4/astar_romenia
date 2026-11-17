@@ -69,3 +69,5 @@ def main():
         print(f'{origem:<10} {custo:>4} km ', ' -> '.join(caminho))
 
 
+if __name__ == '__main__':
+    main()
