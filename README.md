@@ -1773,3 +1773,640 @@ com custo mínimo de:
 ```text
 418 km
 ```
+
+# Documentação do Código - Fase 6
+
+Este código apresenta uma versão mais completa e organizada do algoritmo **A\***, permitindo:
+
+- acompanhar a evolução da busca passo a passo;
+- reutilizar o algoritmo para qualquer origem e destino;
+- ativar ou desativar a exibição do processo de busca;
+- comparar o comportamento do A\* com a Busca de Custo Uniforme;
+- validar automaticamente o resultado esperado.
+
+A função continua utilizando a fórmula clássica:
+
+```text
+f(n) = g(n) + h(n)
+```
+
+onde:
+
+- `g(n)` = custo real acumulado;
+- `h(n)` = estimativa restante até o objetivo;
+- `f(n)` = custo total estimado.
+
+---
+
+# Passo 1 - Função `resumo_fronteira`
+
+```python
+def resumo_fronteira(fronteira):
+```
+
+Gera uma representação resumida da fronteira.
+
+```python
+return ', '.join(
+    f'{cidade}({f})'
+    for f, g, cidade, caminho in fronteira
+)
+```
+
+### Exemplo
+
+Se a fronteira contiver:
+
+```python
+[
+    (393, 140, 'Sibiu', ...),
+    (447, 118, 'Timisoara', ...),
+    (449, 75, 'Zerind', ...)
+]
+```
+
+a saída será:
+
+```text
+Sibiu(393), Timisoara(447), Zerind(449)
+```
+
+**Objetivo:** facilitar a visualização dos nós que ainda podem ser expandidos.
+
+---
+
+# Passo 2 - Definição da Função `busca_a_estrela`
+
+```python
+def busca_a_estrela(
+    inicio,
+    objetivo,
+    grafo,
+    heuristica,
+    mostrar=True
+):
+```
+
+Implementa o algoritmo A* de forma genérica.
+
+### Parâmetros
+
+| Parâmetro | Descrição |
+|------------|------------|
+| inicio | cidade inicial |
+| objetivo | cidade destino |
+| grafo | mapa utilizado na busca |
+| heuristica | tabela de valores h(n) |
+| mostrar | exibe ou não o passo a passo |
+
+### Retorno
+
+```python
+(caminho, custo)
+```
+
+ou
+
+```python
+(None, infinito)
+```
+
+quando não existir solução.
+
+---
+
+# Passo 3 - Inicialização da Busca
+
+```python
+fronteira = [
+    (
+        heuristica[inicio],
+        0,
+        inicio,
+        [inicio]
+    )
+]
+```
+
+Cria o nó inicial.
+
+Formato de cada nó:
+
+```python
+(f, g, cidade, caminho)
+```
+
+Exemplo para Arad:
+
+```python
+(366, 0, 'Arad', ['Arad'])
+```
+
+---
+
+### Conjunto de Explorados
+
+```python
+explorados = set()
+```
+
+Armazena as cidades já processadas.
+
+---
+
+### Contador de Iterações
+
+```python
+iteracao = 0
+```
+
+Permite acompanhar quantos nós foram expandidos até a solução.
+
+---
+
+# Passo 4 - Exibindo Informações Iniciais
+
+```python
+if mostrar:
+    print(
+        f'--- Busca A* de {inicio} para {objetivo} ---'
+    )
+```
+
+Mostra qual busca será executada.
+
+### Exemplo
+
+```text
+--- Busca A* de Arad para Bucharest ---
+```
+
+**Objetivo:** identificar claramente a execução atual.
+
+---
+
+# Passo 5 - Laço Principal
+
+```python
+while fronteira:
+```
+
+A busca continua enquanto houver nós disponíveis.
+
+---
+
+## Incrementando o Número da Iteração
+
+```python
+iteracao = iteracao + 1
+```
+
+Conta quantas expansões foram realizadas.
+
+---
+
+## Ordenando a Fronteira
+
+```python
+fronteira.sort(
+    key=lambda no: no[0]
+)
+```
+
+Ordena pelo valor de:
+
+```python
+no[0]
+```
+
+que representa:
+
+```text
+f(n)
+```
+
+---
+
+## Selecionando o Melhor Nó
+
+```python
+f_atual, g_atual, cidade_atual, caminho = fronteira.pop(0)
+```
+
+Retira o nó com menor valor de `f`.
+
+**Objetivo:** seguir a estratégia do A*, sempre expandindo o candidato mais promissor.
+
+---
+
+# Passo 6 - Exibindo o Nó Expandido
+
+```python
+print(
+    f'{iteracao}. Expandido: {cidade_atual} | '
+    f'g(n)={g_atual}, '
+    f'h(n)={heuristica[cidade_atual]} '
+    f'-> f(n)={f_atual}'
+)
+```
+
+### Exemplo
+
+```text
+1. Expandido: Arad | g(n)=0, h(n)=366 -> f(n)=366
+```
+
+**Objetivo:** mostrar exatamente como o algoritmo está avaliando cada cidade.
+
+---
+
+# Passo 7 - Teste de Objetivo
+
+```python
+if cidade_atual == objetivo:
+```
+
+Verifica se o nó removido da fronteira é o destino.
+
+---
+
+### Encontrando a Solução
+
+```python
+return caminho, g_atual
+```
+
+Retorna:
+
+- caminho encontrado;
+- custo total da rota.
+
+Antes disso:
+
+```python
+print(
+    f'Objetivo encontrado em {iteracao} iterações'
+)
+```
+
+### Exemplo
+
+```text
+Objetivo encontrado em 6 iterações
+```
+
+**Objetivo:** encerrar a busca quando a solução ótima for retirada da fronteira.
+
+---
+
+# Passo 8 - Controle de Explorados
+
+```python
+if cidade_atual in explorados:
+    continue
+```
+
+Ignora cidades já processadas.
+
+---
+
+### Registrando a Cidade
+
+```python
+explorados.add(cidade_atual)
+```
+
+Marca a cidade atual como explorada.
+
+**Objetivo:** evitar ciclos e expansões redundantes.
+
+---
+
+# Passo 9 - Geração dos Filhos
+
+```python
+for vizinho, custo_estrada in grafo.get(cidade_atual, [])
+```
+
+Percorre os vizinhos da cidade atual.
+
+---
+
+## Ignorando Nós Já Explorados
+
+```python
+if vizinho not in explorados:
+```
+
+Impede que cidades processadas voltem para a fronteira.
+
+---
+
+## Calculando o Novo Custo
+
+```python
+novo_g = g_atual + custo_estrada
+```
+
+Representa o custo real até o vizinho.
+
+---
+
+## Calculando o Novo `f`
+
+```python
+novo_f = novo_g + heuristica[vizinho]
+```
+
+Aplica:
+
+```text
+f(n) = g(n) + h(n)
+```
+
+---
+
+## Adicionando à Fronteira
+
+```python
+fronteira.append(
+    (
+        novo_f,
+        novo_g,
+        vizinho,
+        caminho + [vizinho]
+    )
+)
+```
+
+Adiciona o novo candidato à busca.
+
+---
+
+# Passo 10 - Exibindo a Fronteira
+
+```python
+fronteira.sort(key=lambda no: no[0])
+```
+
+Ordena novamente a fronteira.
+
+---
+
+### Exibição
+
+```python
+print(
+    '     fronteira:',
+    resumo_fronteira(fronteira)
+)
+```
+
+### Exemplo
+
+```text
+fronteira:
+Sibiu(393), Timisoara(447), Zerind(449)
+```
+
+**Objetivo:** acompanhar visualmente os próximos candidatos.
+
+---
+
+# Passo 11 - Falha da Busca
+
+```python
+return None, float('inf')
+```
+
+Executado apenas quando não existe caminho possível.
+
+---
+
+# Passo 12 - Função `main`
+
+```python
+def main():
+```
+
+Responsável pelos testes do programa.
+
+---
+
+## Criando uma Heurística Zerada
+
+```python
+h_zero = {c: 0 for c in mapa_romenia}
+```
+
+Produz:
+
+```python
+{
+    'Arad': 0,
+    'Sibiu': 0,
+    ...
+}
+```
+
+### O que isso significa?
+
+Como:
+
+```text
+f(n) = g(n) + h(n)
+```
+
+e:
+
+```text
+h(n) = 0
+```
+
+temos:
+
+```text
+f(n) = g(n)
+```
+
+Ou seja:
+
+```text
+Busca de Custo Uniforme
+```
+
+---
+
+## Executando a Busca
+
+```python
+caminho, custo = busca_a_estrela(
+    'Arad',
+    'Bucharest',
+    mapa_romenia,
+    h_zero
+)
+```
+
+Busca o caminho ótimo a partir de Arad.
+
+---
+
+# Passo 13 - Exibindo o Resultado
+
+```python
+print(
+    'Caminho encontrado:',
+    ' -> '.join(caminho)
+)
+```
+
+### Exemplo
+
+```text
+Arad -> Sibiu -> Rimnicu Vilcea -> Pitesti -> Bucharest
+```
+
+---
+
+### Custo Total
+
+```python
+print(
+    f'Custo real total: {custo} km'
+)
+```
+
+Resultado:
+
+```text
+418 km
+```
+
+---
+
+### Número de Passos
+
+```python
+len(caminho) - 1
+```
+
+Resultado:
+
+```text
+4 estradas
+```
+
+---
+
+# Passo 14 - Teste de Regressão
+
+```python
+if custo == 418 and len(caminho) - 1 == 4:
+```
+
+Verifica se o resultado encontrado está igual ao exemplo clássico apresentado no livro.
+
+---
+
+### Resultado Esperado
+
+```text
+418 km
+4 passos
+```
+
+---
+
+### Mensagem de Sucesso
+
+```python
+Conferido: igual ao livro
+(418 km, 4 passos)
+```
+
+**Objetivo:** validar automaticamente o algoritmo.
+
+---
+
+# Passo 15 - Testando Outras Origens
+
+```python
+for origem in [
+    'Lugoj',
+    'Mehadia',
+    'Eforie',
+    'Iasi'
+]:
+```
+
+Executa novas buscas para Bucareste utilizando cidades diferentes.
+
+---
+
+### Exemplo
+
+```python
+busca_a_estrela(
+    origem,
+    'Bucharest',
+    mapa_romenia,
+    heuristica_bucareste,
+    mostrar=True
+)
+```
+
+Para cada cidade o algoritmo:
+
+1. Executa a busca;
+2. Mostra as expansões;
+3. Exibe o caminho encontrado;
+4. Mostra o custo total.
+
+---
+
+# Passo 16 - Ponto de Entrada do Programa
+
+```python
+if __name__ == '__main__':
+    main()
+```
+
+Executa a função principal somente quando o arquivo é rodado diretamente.
+
+**Objetivo:** permitir que o módulo seja reutilizado sem executar automaticamente os testes.
+
+---
+
+# Resumo
+
+Esta versão representa uma implementação completa e reutilizável do algoritmo **A\***.
+
+Ela adiciona:
+
+✅ Exibição detalhada das iterações.  
+✅ Visualização da fronteira.  
+✅ Controle de cidades exploradas.  
+✅ Encerramento correto ao encontrar o objetivo.  
+✅ Teste automático de validação.  
+✅ Comparação entre A* e Busca de Custo Uniforme.  
+✅ Execução para múltiplas cidades de origem.
+
+O resultado esperado para o problema clássico continua sendo:
+
+```text
+Arad
+→ Sibiu
+→ Rimnicu Vilcea
+→ Pitesti
+→ Bucharest
+```
+
+com:
+
+```text
+Custo total = 418 km
+Passos = 4 estradas
+```
+
+que corresponde à solução ótima encontrada pelo algoritmo A*.
