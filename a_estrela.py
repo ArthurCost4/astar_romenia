@@ -28,6 +28,7 @@ def busca_a_estrela(inicio, objetivo, grafo, heuristica, mostrar=True):
                   f'-> f(n)={f_atual}')
 
         if cidade_atual == objetivo:
+            print(f'Objetivo encontrado em {iteracao} iterações')
             return caminho, g_atual
 
         if cidade_atual in explorados:
@@ -47,7 +48,8 @@ def busca_a_estrela(inicio, objetivo, grafo, heuristica, mostrar=True):
     return None, float('inf')
 
 def main():
-    caminho, custo = busca_a_estrela('Arad', 'Bucharest', mapa_romenia, heuristica_bucareste)
+    h_zero = {c: 0 for c in mapa_romenia}
+    caminho, custo = busca_a_estrela('Arad', 'Bucharest', mapa_romenia, h_zero)
     print()
     print('--- Resultado ---')
     if caminho:
@@ -65,7 +67,7 @@ def main():
     print()
     print('--- Outras origens (sem rastro) ---')
     for origem in ['Timisoara', 'Oradea', 'Craiova', 'Iasi']:
-        caminho, custo = busca_a_estrela(origem, 'Bucharest', mapa_romenia, heuristica_bucareste, mostrar=False)
+        caminho, custo = busca_a_estrela(origem, 'Bucharest', mapa_romenia, h_zero, mostrar=False)
         print(f'{origem:<10} {custo:>4} km ', ' -> '.join(caminho))
 
 
