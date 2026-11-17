@@ -1,3 +1,4 @@
+# Arthur Linhares 
 ## Como rodar
 
     python a_estrela.py
