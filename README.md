@@ -1,3 +1,11 @@
+## Como rodar
+
+    python a_estrela.py
+
+## Resultado
+Arad -> Sibiu -> Rimnicu Vilcea -> Pitesti -> Bucharest
+(418 km em 4 passos, igual à Figura 3.24 do livro)
+
 # Documentação FASE 1
 
 Este código realiza uma exploração da estrutura de dados de um **mapa da Romênia** (`mapa_romenia`) e de uma tabela de **heurísticas para Bucareste** (`heuristica_bucareste`). O objetivo é compreender como os dados do grafo estão organizados e como acessar informações relevantes para algoritmos de busca heurística, como o **A\***.
